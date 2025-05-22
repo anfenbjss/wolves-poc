@@ -1,1 +1,1 @@
-{"name":"PDMSMobile","short_name":"PDMSMobile","description":"PDMSMobile","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","lang":"en","scope":"/","version":"0.1.0","icons":[{"src":"icon-512x512.png","sizes":"512x512","type":"image/png"}]}
+{"name":"WolvesPOC","short_name":"WolvesPOC","description":"WolvesPOC","start_url":"/","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","lang":"en","scope":"/wolves-poc/","version":"0.1.0","icons":[{"src":"icon-512x512.png","sizes":"512x512","type":"image/png"}]}
