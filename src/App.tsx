@@ -22,6 +22,9 @@ function App() {
         new Set(['page-0']),
     );
     const [sheets, setSheets] = useState<Sheet[]>([]);
+    const [lastModifiedDate, setLastModifiedDate] = useState<string | null>(
+        null,
+    );
     //const [isRtl, setIsRtl] = useState(false);
 
     useEffect(() => {
@@ -55,6 +58,23 @@ function App() {
         readXLSXFromAsset();
     }, []);
 
+    useEffect(() => {
+        fetch('/wolves-poc/data.xlsx', {
+            method: 'HEAD',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const lastModified = response.headers.get('Last-Modified');
+                console.log('Last Modified Date:', lastModified);
+                setLastModifiedDate(lastModified);
+            })
+            .catch((error) => {
+                console.error('Error fetching file metadata:', error);
+            });
+    }, []);
+
     const onTabChange = (key: Key) => {
         setSelectedTabId(key);
         setLoadedPages((prev) => new Set(prev).add(key));
@@ -65,6 +85,9 @@ function App() {
             <title>{manifest.name}</title>
             {/* <TopBar selectedTabId={selectedTabId} onTabChange={onTabChange} />
             <Page loadedPages={loadedPages} selectedPageId={selectedTabId} /> */}
+
+            <h3 className="last-modified">data.xlsx Last Modified:</h3>
+            <p className="last-modified">{lastModifiedDate}</p>
 
             {/* <div className="language-direction">
                 <h2>Language Direction</h2>
@@ -80,7 +103,7 @@ function App() {
 
             {sheets.map((sheet, index) => (
                 <div key={index}>
-                    <h2>{sheet.name}</h2>
+                    <h3>{sheet.name}</h3>
                     <table>
                         <thead>
                             <tr>
@@ -96,16 +119,31 @@ function App() {
                                     <tr key={rowIndex}>
                                         {Object.values(row).map(
                                             (value, colIndex) => {
-                                                const isRtl = Object.keys(sheet.rows[0])[colIndex] == 'he';
+                                                const isRtl =
+                                                    Object.keys(sheet.rows[0])[
+                                                        colIndex
+                                                    ] == 'he';
 
                                                 return (
-                                                <td
-                                                    key={colIndex}
-                                                    dir={isRtl ? 'rtl' : 'ltr'}
-                                                >
-                                                    {value}
-                                                </td>
-                                            )},
+                                                    <td
+                                                        key={colIndex}
+                                                        dir={
+                                                            isRtl
+                                                                ? 'rtl'
+                                                                : 'ltr'
+                                                        }
+                                                        style={{
+                                                            minWidth:
+                                                                index > 0 &&
+                                                                colIndex < 2
+                                                                    ? '30px'
+                                                                    : '',
+                                                        }}
+                                                    >
+                                                        {value}
+                                                    </td>
+                                                );
+                                            },
                                         )}
                                     </tr>
                                 ))}

@@ -1,4 +1,5 @@
-h2,
+h3,
+p,
 table {
     color: white;
 }
@@ -12,6 +13,11 @@ td {
     min-width: 100px;
 }
 
-language-direction {
+.language-direction {
     color: white;
+}
+
+.last-modified {
+    margin: 0;
+    padding: 0;
 }
