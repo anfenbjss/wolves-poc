@@ -1,0 +1,16 @@
+{
+    "name": "WolvesPOC",
+    "short_name": "WolvesPOC",
+    "version": "0.1.0",
+    "description": "WolvesPOC",
+    "icons": [
+        {
+            "src": "icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff"
+}
