@@ -9,6 +9,7 @@ import manifest from './manifest.json';
 
 // https://vite.dev/config/
 export default defineConfig({
+    base: '/wolves-poc/',
     resolve: {
         alias: { '@': path.resolve(__dirname, './src') },
     },

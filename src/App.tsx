@@ -21,7 +21,7 @@ function App() {
     }, []);
 
     async function readXLSXFromAsset() {
-        const response = await fetch('/data.xlsx');
+        const response = await fetch('/wolves-poc/data.xlsx');
         const arrayBuffer = await response.arrayBuffer();
 
         const data = new Uint8Array(arrayBuffer);
