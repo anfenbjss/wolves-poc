@@ -1,0 +1,17 @@
+h2,
+table {
+    color: white;
+}
+
+table {
+    border: 1px solid white;
+}
+
+td {
+    border: 1px solid white;
+    min-width: 100px;
+}
+
+language-direction {
+    color: white;
+}

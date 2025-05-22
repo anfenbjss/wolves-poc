@@ -1,40 +1,59 @@
 import { useEffect, useState } from 'react';
-import { Key } from 'react-aria-components';
+import { Key, Radio, RadioGroup } from 'react-aria-components';
 
 import * as XLSX from 'xlsx';
 
 import manifest from '@/../manifest.json';
 import withErrorBoundary from '@/hocs/withErrorBoundary';
+import '@/styles/react-aria/RadioGroup.css';
 
+import './App.css';
 import Page from './layouts/Page';
 import TopBar from './layouts/TopBar';
+
+type Sheet = {
+    name: string;
+    rows: unknown[];
+};
 
 function App() {
     const [selectedTabId, setSelectedTabId] = useState<Key>('page-0');
     const [loadedPages, setLoadedPages] = useState<Set<Key>>(
         new Set(['page-0']),
     );
+    const [sheets, setSheets] = useState<Sheet[]>([]);
+    const [isRtl, setIsRtl] = useState(false);
 
     useEffect(() => {
+        async function readXLSXFromAsset() {
+            const response = await fetch('/wolves-poc/data.xlsx');
+            const arrayBuffer = await response.arrayBuffer();
+
+            const data = new Uint8Array(arrayBuffer);
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            setSheets([]);
+
+            workbook.SheetNames.map((name) => {
+                const sheet = workbook.Sheets[name];
+                const json = XLSX.utils.sheet_to_json(sheet, {
+                    defval: '',
+                });
+                setSheets((prev) => [
+                    ...prev,
+                    {
+                        name,
+                        rows: json,
+                    },
+                ]);
+            });
+
+            console.log(sheets);
+        }
+
         console.log(navigator.language);
         readXLSXFromAsset();
     }, []);
-
-    async function readXLSXFromAsset() {
-        const response = await fetch('/wolves-poc/data.xlsx');
-        const arrayBuffer = await response.arrayBuffer();
-
-        const data = new Uint8Array(arrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-            defval: '',
-        });
-        console.log(jsonData);
-    }
 
     const onTabChange = (key: Key) => {
         setSelectedTabId(key);
@@ -44,8 +63,53 @@ function App() {
     return (
         <>
             <title>{manifest.name}</title>
-            <TopBar selectedTabId={selectedTabId} onTabChange={onTabChange} />
-            <Page loadedPages={loadedPages} selectedPageId={selectedTabId} />
+            {/* <TopBar selectedTabId={selectedTabId} onTabChange={onTabChange} />
+            <Page loadedPages={loadedPages} selectedPageId={selectedTabId} /> */}
+
+            <div className="language-direction">
+                <h2>Language Direction</h2>
+                <RadioGroup
+                    value={isRtl.toString()}
+                    onChange={(val) => setIsRtl(val === 'true')}
+                    aria-label="Language Direction"
+                >
+                    <Radio value="false">LTR</Radio>
+                    <Radio value="true">RTL</Radio>
+                </RadioGroup>
+            </div>
+
+            {sheets.map((sheet, index) => (
+                <div key={index}>
+                    <h2>{sheet.name}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                {sheet.rows &&
+                                    Object.keys(sheet.rows[0]).map((key) => (
+                                        <th key={key}>{key}</th>
+                                    ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sheet.rows &&
+                                sheet.rows.map((row, rowIndex) => (
+                                    <tr key={rowIndex}>
+                                        {Object.values(row).map(
+                                            (value, colIndex) => (
+                                                <td
+                                                    key={colIndex}
+                                                    dir={isRtl ? 'rtl' : 'ltr'}
+                                                >
+                                                    {value}
+                                                </td>
+                                            ),
+                                        )}
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </table>
+                </div>
+            ))}
         </>
     );
 }
