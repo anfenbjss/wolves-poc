@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Key, Radio, RadioGroup } from 'react-aria-components';
+import { Key, Link, Radio, RadioGroup } from 'react-aria-components';
 
 import * as XLSX from 'xlsx';
 
 import manifest from '@/../manifest.json';
 import withErrorBoundary from '@/hocs/withErrorBoundary';
+import '@/styles/react-aria/Link.css';
 import '@/styles/react-aria/RadioGroup.css';
 
 import './App.css';
@@ -86,8 +87,11 @@ function App() {
             {/* <TopBar selectedTabId={selectedTabId} onTabChange={onTabChange} />
             <Page loadedPages={loadedPages} selectedPageId={selectedTabId} /> */}
 
-            <h3 className="last-modified">data.xlsx Last Modified:</h3>
+            <h3 className="last-modified">data.xlsx last modified:</h3>
             <p className="last-modified">{lastModifiedDate}</p>
+            <Link href="/wolves-poc/data.xlsx" download>
+                Download data.xlsx
+            </Link>
 
             {/* <div className="language-direction">
                 <h2>Language Direction</h2>
