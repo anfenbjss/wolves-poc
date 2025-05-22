@@ -22,7 +22,7 @@ function App() {
         new Set(['page-0']),
     );
     const [sheets, setSheets] = useState<Sheet[]>([]);
-    const [isRtl, setIsRtl] = useState(false);
+    //const [isRtl, setIsRtl] = useState(false);
 
     useEffect(() => {
         async function readXLSXFromAsset() {
@@ -66,7 +66,7 @@ function App() {
             {/* <TopBar selectedTabId={selectedTabId} onTabChange={onTabChange} />
             <Page loadedPages={loadedPages} selectedPageId={selectedTabId} /> */}
 
-            <div className="language-direction">
+            {/* <div className="language-direction">
                 <h2>Language Direction</h2>
                 <RadioGroup
                     value={isRtl.toString()}
@@ -76,7 +76,7 @@ function App() {
                     <Radio value="false">LTR</Radio>
                     <Radio value="true">RTL</Radio>
                 </RadioGroup>
-            </div>
+            </div> */}
 
             {sheets.map((sheet, index) => (
                 <div key={index}>
@@ -95,14 +95,17 @@ function App() {
                                 sheet.rows.map((row, rowIndex) => (
                                     <tr key={rowIndex}>
                                         {Object.values(row).map(
-                                            (value, colIndex) => (
+                                            (value, colIndex) => {
+                                                const isRtl = Object.keys(sheet.rows[0])[colIndex] == 'he';
+
+                                                return (
                                                 <td
                                                     key={colIndex}
                                                     dir={isRtl ? 'rtl' : 'ltr'}
                                                 >
                                                     {value}
                                                 </td>
-                                            ),
+                                            )},
                                         )}
                                     </tr>
                                 ))}
